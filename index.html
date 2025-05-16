@@ -28,7 +28,7 @@
     position: fixed;
     top: 10px;
     left: 10px;
-    z-index: 1100;
+    z-index: 1100; /* Muy alto para que no quede debajo de nada */
     background: #240046;
     border: none;
     color: #ff9e00;
@@ -36,6 +36,8 @@
     padding: 0.3rem 0.6rem;
     border-radius: 4px;
     cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
   }
 
   nav {
@@ -90,7 +92,7 @@
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
-    padding-top: 5rem; /* <-- Aquí */
+    padding-top: 5rem; /* Espacio para que el contenido no quede tapado */
   }
 
   section.bloque {
@@ -269,9 +271,13 @@
     });
   });
 
-  btnMenu.addEventListener('click', () => {
+  function toggleMenu(event) {
+    event.preventDefault();
     nav.classList.toggle('open');
-  });
+  }
+
+  btnMenu.addEventListener('click', toggleMenu);
+  btnMenu.addEventListener('touchstart', toggleMenu);
 
   // Cargar plantilla inicial
   cargarPlantilla('info');
