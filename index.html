@@ -22,6 +22,22 @@
     height: 100vh;
   }
 
+  /* BOTÓN HAMBURGUESA */
+  #btn-menu {
+    display: none;
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 1100;
+    background: #240046;
+    border: none;
+    color: #ff9e00;
+    font-size: 1.8rem;
+    padding: 0.3rem 0.6rem;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
   nav {
     width: 250px;
     background: #240046;
@@ -30,6 +46,8 @@
     display: flex;
     flex-direction: column;
     gap: 0.8rem;
+    transition: transform 0.3s ease;
+    z-index: 1000;
   }
   nav h2 {
     margin: 0 0 1rem 0;
@@ -72,6 +90,7 @@
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
+    padding-top: 5rem; /* <-- Aquí */
   }
 
   section.bloque {
@@ -106,9 +125,41 @@
   footer a:hover {
     text-decoration: underline;
   }
+
+  /* Responsive: ocultar nav y mostrar botón hamburguesa */
+  @media (max-width: 768px) {
+    #btn-menu {
+      display: block;
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      transform: translateX(-100%);
+      box-shadow: 2px 0 5px rgba(0,0,0,0.3);
+      background: #240046;
+      padding-top: 3.5rem; /* espacio para el botón hamburguesa */
+    }
+    nav.open {
+      transform: translateX(0);
+    }
+
+    .main-footer-container {
+      flex: 1;
+      overflow: visible;
+    }
+
+    main {
+      padding: 1rem 1rem 4rem 1rem;
+    }
+  }
 </style>
 </head>
 <body>
+
+<button id="btn-menu" aria-label="Abrir menú">&#9776;</button>
 
 <div class="layout">
   <!-- ÍNDICE -->
@@ -148,32 +199,23 @@
   </section>
   <section class="bloque">
     <h2>Índice</h2>
-    <ul>
-      <li>Tema 1
+      <h3>Tema 1</h3>
         <ul>
           <li>Bloque 1</li>
           <li>Bloque 2</li>
           <li>Bloque 3</li>
         </ul>
-      </li>
-      <li>Tema 2
+      <h3>Tema 2</h3>
         <ul>
           <li>Bloque 1</li>
           <li>Bloque 2</li>
         </ul>
-      </li>
-    </ul>
   </section>
 </template>
 
 <!-- Plantillas modulares con varios bloques -->
-<!-- EDITA A PARTIR DE AQUÍ-->
+<template id="temaE"></template>
 
-<template id="temaE">
-
-</template>
-
-<!-- Apartado plantillas de ejemplo -->
 <template id="plantillas">
   <section class="bloque">
     <h2>1.1 Nombre de bloque</h2>
@@ -201,10 +243,11 @@
   </section>
 </template>
 
-<!--Código para poner los bloques en la web al pulsar el índice-->
 <script>
   const botones = document.querySelectorAll('nav button');
   const contenido = document.getElementById('contenido');
+  const btnMenu = document.getElementById('btn-menu');
+  const nav = document.querySelector('nav');
 
   function cargarPlantilla(id) {
     const plantilla = document.getElementById(id);
@@ -218,7 +261,16 @@
       botones.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       cargarPlantilla(btn.dataset.template);
+
+      // Cerrar menú al seleccionar opción en móvil
+      if (nav.classList.contains('open')) {
+        nav.classList.remove('open');
+      }
     });
+  });
+
+  btnMenu.addEventListener('click', () => {
+    nav.classList.toggle('open');
   });
 
   // Cargar plantilla inicial
